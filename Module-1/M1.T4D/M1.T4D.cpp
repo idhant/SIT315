@@ -5,9 +5,18 @@
 // Video about internal ISRS and groups 
 // https://www.youtube.com/watch?v=ZDtRWmBMCmw&ab_channel=Electronoobs
 
+// Video about timer interrupts
+// https://www.youtube.com/watch?v=2kr5A350H7E&ab_channel=SparkFunElectronics
+
 // Atmega328P datasheet sections
+
+// For more PCINT ISR
 // 12.2.4 PCICR – Pin Change Interrupt Control Register
 // 12.2.6 PCMSK2 – Pin Change Mask Register 2
+
+// For timer ISR
+// 15.11.2 TCCR1B – Timer/Counter1 Control Register B
+
 
 // Start of code
 
@@ -46,7 +55,6 @@ void setup()
   
   // Sensor ISR related setup
   
-  
   // defining pinmodes
   pinMode(led1Pin, OUTPUT);
   pinMode(led2Pin, OUTPUT);
@@ -64,7 +72,6 @@ void setup()
   PCICR  |= bit (PCIE2);   // enable pin change interrupts for D04 to D06
   
   
-  
   // Timer1 ISR related setup
   
   pinMode(timeLedPin, OUTPUT);
@@ -72,7 +79,7 @@ void setup()
   // Reseting the timer1 control register A
   TCCR1A = 0;
   
-  // Section 14.9.2 Table 14-9
+  // Section 15.11.2 Table 15-6
   // Setting the prescaler to 256 by changing relevent bit values
   TCCR1B |= (1 << CS12); // bit value = 1
   TCCR1B &= ~(1 << CS11); // bit value = 0
@@ -99,7 +106,7 @@ void loop ()
   delay(500);
 } 
 
-
+// ISR function called on the group Vectors
 ISR (PCINT2_vect) //D04-06
 {
   //Serial.println("ISR triggered");
@@ -136,6 +143,7 @@ ISR (PCINT2_vect) //D04-06
   
 }
 
+// ISR function called on the timer1 compare vector
 ISR(TIMER1_COMPA_vect)
 {
   TCNT1 = t1_load;
